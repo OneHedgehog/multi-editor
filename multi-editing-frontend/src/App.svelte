@@ -1,13 +1,29 @@
 <script>
-	export let editableText;
-	const handleKeydown = (event, text) => {
-		console.log('target.str = ', event.target.value);
+	const matrixText = [];
+	const handleKeyDown = (event) => {
+		const {target, key} = event;
+		const {selectionStart, selectionEnd} = target;
+
+		const selectionDiff = selectionEnd - selectionStart;
+
+		if (event.key === 'Backspace') {
+			matrixText.splice(selectionStart, selectionDiff || 1);
+			return;
+		}
+
+		// need to delete selected text when start typing ( if there is a selection )
+		if (selectionDiff) {
+			matrixText.splice(selectionStart, selectionDiff);
+		}
+
+		matrixText[selectionStart] = key;
+		console.log(matrixText);
 	}
 </script>
 
 <main>
 	<h1>Hedgehog Multieditor</h1>
-	<textarea class='editor' contenteditable="true" on:input={handleKeydown} bind:value={editableText}></textarea>
+	<textarea class='editor' contenteditable="true" on:keydown={handleKeyDown}></textarea>
 </main>
 
 <style>
